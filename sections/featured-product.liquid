@@ -1,0 +1,88 @@
+{% liquid
+assign product = all_products[section.settings.product]
+
+%}
+
+<section class="featured-product py-4">
+  <h2 class="text-center">{{ section.settings.section_heading }}</h2>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <img src="{{product.featured_image | img_url:'orginal' }}" width="100%" loading="lazy">
+      </div>
+      <div class="col-sm-6">
+        {% for block in section.blocks %}
+            {% case block.type %}
+              {% when "title" %}
+                <h4> title:{{ product.title }}</h4>
+              {% when "price" %}
+                <p>price: {{product.price  }}</p>
+
+            {% when "description" %}
+              <p> description:{{ product.description }}</p>
+        {% endcase %}
+        {% endfor %}
+        {% form  "product" , product%}
+          <input type="hidden" value="{{ product.selected_or_first_available_variant.id }}"  name="id" />
+          <div class="quantity-selector">
+            <label>Quantity:</label>
+            <input name="quantity" min="1" value="1" type="number" class="quantity">
+          </div>
+        <div>
+          <input type="submit" class="btn btn-primary" value="Add to cart"/>
+        </div>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+{% schema %}
+  {
+    "name":"featured product",
+    "settings":[
+      {
+        "type":"text",
+        "id":"section_heading",
+        "label":"Write Section Heading"
+      },{
+        "type":"product",
+        "id":"product",
+        "label":"Product"
+      }
+    ],
+    "blocks":[
+      {
+        "type":"title",
+        "name":"title",
+        "limit":1
+      },{
+        "type":"price",
+        "name":"Product price",
+        "limit":1
+      },{
+        "type":"description",
+        "name":"Product Description",
+        "limit":1
+      }
+    ],
+    "presets":[
+      {
+        "name": "Featured Proudct",
+        "category":"collection",
+        "blocks":[
+          {
+            "type":"title"
+          },{
+            "type":"price"
+          },{
+            "type":"description"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

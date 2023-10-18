@@ -1,0 +1,93 @@
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    {% for block in section.blocks %}
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="{{ forloop.index0 }}"
+        {% if forloop.index == 1 %}
+        class="active"
+        aria-current="true"
+        aria-label="Slide {{  forloop.index }}"
+        {% else %}
+           aria-current="false"
+           aria-label="Slide {{ forloop.index }}"
+          {% endif %}
+      ></button>
+    {% endfor %}
+  </div>
+  <div class="carousel-inner">
+    {% for block in section.blocks %}
+      <div class="carousel-item {% if forloop.index == 1  %}active {% endif %}">
+        <img src="{{ block.settings.slider_image | image_url}}" loading="lazy" class="d-block w-100" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>{{ block.settings.slider_heading }}</h5>
+          <p>{{ block.settings.slider_subheading }}</p>
+          {% if block.settings.show_slider_btn %}
+            <div class="slider_btn">
+              <a href="{{ block.settings.button_link }}" class="btn btn-primary">{{block.settings.slider_btn_text  }}</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% if section.blocks.size > 1 %}
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name":"Hero Slider",
+  "blocks":[
+    {
+      "type":"slider",
+      "name":"slider",
+      "settings":[
+        {
+          "type":"image_picker",
+          "id":"slider_image",
+          "label":"Select Slider Image"
+        },{
+          "type":"text",
+          "id":"slider_heading",
+          "label":"Write Slider Heading"
+        },
+        {
+          "type":"richtext",
+          "id":"slider_subheading",
+          "label":"Write Slider Sub Heading"
+        },{
+          "type":"checkbox",
+          "id":"show_slider_btn",
+          "label":"Show Slider Button",
+          "default":true
+        },{
+          "type":"text",
+          "id":"slider_btn_text",
+          "label":"Write Slider Button Text",
+          "default":"Buy Now"
+        },{
+          "type":"url",
+          "id":"button_link",
+          "label":"Button Link"
+        }
+      ]
+    }
+  ],
+  "presets":[
+    {
+      "name":"Hero Slider",
+      "category":"slider"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,84 @@
+{% liquid
+assign logo = section.settings.site_logo
+assign menu = section.settings.menu
+assign searchbar = section.settings.enable_searchbar
+
+%}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+  <div class="container">
+
+    {% if logo != blank  %}
+        <a class="navbar-brand text-uppercase text-white" href="/">{{ logo | img_tag }}</a>
+      {% else %}
+       <a class="navbar-brand text-uppercase text-white" href="/">{{ shop.name }}</a>
+    {% endif %}
+   
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
+        {% for link in menu.links %}
+          <li class="nav-item text-white  {% if link.links.size > 0  %} dropdown {% endif %}">
+            <a class="nav-link active text-white {% if link.links.size > 0 %} dropdown-toggle {% endif %}" aria-current="page" href="{{ link.url }}" {% if link.links.size > 0  %} id="navbarDropdown_{{ forloop.index }}" role="button" data-bs-toggle="dropdown" aria-expanded="false {% endif %}">
+                {{ link.title }}
+            </a>
+            {% if link.links.size > 0 %}
+              <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                {% for dropLink in link.links %}
+                 <li><a class="dropdown-item text-white" href="{{ dropLink.url }}">{{ dropLink.title }}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+       {% endfor %}
+        <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" >
+            Dropdown
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item text-white" href="#">Action</a></li>
+            <li><a class="dropdown-item text-white" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-white" href="#">Something else here</a></li>
+          </ul>
+        </li>-->
+       
+      </ul>
+      {% if searchbar %}
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+{% schema %}
+  {
+    "name":"Header",
+  "settings":[
+    {
+      "type":"image_picker",
+      "id":"site_logo",
+      "label":"Select Site Logo",
+      "info":"Recommanded logo size 200X200 px"
+    },{
+      "type":"link_list",
+      "id":"menu",
+      "label":"Select Menu"
+    },{
+      "type":"header",
+      "content":"Search Bar"
+    },{
+      "type":"checkbox",
+      "id":"enable_searchbar",
+      "label":"Enable Search Bar",
+      "default":true
+    }
+  ]
+  }
+  
+{% endschema %}

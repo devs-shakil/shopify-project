@@ -8,8 +8,16 @@ assign product = all_products[section.settings.product]
   <div class="container">
     <div class="row">
       <div class="col-sm-6">
-        <img src="{{product.featured_image | img_url:'orginal' }}" width="100%" loading="lazy">
+        {%  capture  image_position %} 
+          {% if product.featured_image != blank  %} 
+            <img src="{{product.featured_image | img_url:'orginal' }}" width="100%" loading="lazy">
+           {% endif %}
+        {% endcapture %} 
+        
       </div>
+        {% if section.settings.image-position == 'left' %}
+          {{image_position}}
+        {% endif %}
       <div class="col-sm-6">
         {% for block in section.blocks %}
             {% case block.type %}
@@ -20,8 +28,8 @@ assign product = all_products[section.settings.product]
 
             {% when "description" %}
               <p> description:{{ product.description }}</p>
-        {% endcase %}
-        {% endfor %}
+             {% endcase %}
+           {% endfor %}
         {% form  "product" , product%}
           <input type="hidden" value="{{ product.selected_or_first_available_variant.id }}"  name="id" />
           <div class="quantity-selector">
@@ -33,6 +41,9 @@ assign product = all_products[section.settings.product]
         </div>
         {% endform %}
       </div>
+      {% if section.settings.image-position == "right" %}
+        {{image_position}}
+      {% endif %}
     </div>
   </div>
 </section>
@@ -52,6 +63,23 @@ assign product = all_products[section.settings.product]
         "type":"product",
         "id":"product",
         "label":"Product"
+      },{
+        "type":"header",
+        "content":"settings"
+      },{
+        "type": "select",
+        "id":"image-position",
+        "label": "Image Position",
+        "default": "left",
+        "options": [
+          {
+            "value":"left",
+            "label":"Left"
+          },{
+            "value":"right",
+            "label":"Right"
+          }
+        ]
       }
     ],
     "blocks":[
